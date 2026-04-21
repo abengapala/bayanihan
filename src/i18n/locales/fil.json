@@ -1,0 +1,36 @@
+{
+  "nav": {
+    "home": "Home",
+    "wizard": "Wizard",
+    "directory": "Directory",
+    "map": "Mapa",
+    "senators": "Mga Senador"
+  },
+  "wizard": {
+    "title": "Requirements Checker",
+    "step1": {
+      "title": "Ano ang sitwasyon ng pasyente?",
+      "confined": "Naka-confine",
+      "outpatient": "Outpatient",
+      "public": "Pampubliko",
+      "private": "Pribado"
+    },
+    "step2": {
+      "title": "Anong tulong ang kailangan?"
+    },
+    "step3": {
+      "title": "Mga Kailangang Dokumento"
+    },
+    "step4": {
+      "title": "Pinakamalapit na Opisina"
+    },
+    "next": "Susunod",
+    "back": "Bumalik"
+  },
+  "common": {
+    "loading": "Naglo-load...",
+    "error": "May nangyaring error.",
+    "search": "Maghanap...",
+    "all": "Lahat"
+  }
+}

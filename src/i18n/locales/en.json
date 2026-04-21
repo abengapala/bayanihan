@@ -1,0 +1,36 @@
+{
+  "nav": {
+    "home": "Home",
+    "wizard": "Wizard",
+    "directory": "Directory",
+    "map": "Map",
+    "senators": "Senators"
+  },
+  "wizard": {
+    "title": "Requirements Checker",
+    "step1": {
+      "title": "What is the patient's situation?",
+      "confined": "Confined / Admitted",
+      "outpatient": "Outpatient",
+      "public": "Public Hospital",
+      "private": "Private Hospital"
+    },
+    "step2": {
+      "title": "What assistance do you need?"
+    },
+    "step3": {
+      "title": "Required Documents"
+    },
+    "step4": {
+      "title": "Nearest Offices"
+    },
+    "next": "Next",
+    "back": "Back"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred.",
+    "search": "Search...",
+    "all": "All"
+  }
+}
