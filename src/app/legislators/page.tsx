@@ -6,8 +6,8 @@ import { useWizardStore } from '@/store/wizardStore';
 import { Mail, AlertTriangle, Users, Clock, ExternalLink, Copy, Check } from 'lucide-react';
 import { ReportWrongInfo } from '@/components/ui/ReportWrongInfo';
 
-// Pre-built email body template for Gmail
-function buildGmailLink(gl_email: string, subject_format: string, documentsList?: string[]) {
+// Build email body shared by both app and web links
+function buildEmailParts(gl_email: string, subject_format: string, documentsList?: string[]) {
   const subject = subject_format
     .replace('[Patient Name]', '')
     .replace('[Hospital Name]', '')
@@ -20,7 +20,9 @@ function buildGmailLink(gl_email: string, subject_format: string, documentsList?
     '4. Valid Government ID (pasyente at kamag-anak)',
   ];
 
-  const docsToUse = documentsList && documentsList.length > 0 ? documentsList.map((d, i) => `${i + 1}. ${d}`) : defaultDocs;
+  const docsToUse = documentsList && documentsList.length > 0
+    ? documentsList.map((d, i) => `${i + 1}. ${d}`)
+    : defaultDocs;
 
   const body = [
     'Magandang araw po,',
@@ -41,7 +43,40 @@ function buildGmailLink(gl_email: string, subject_format: string, documentsList?
     '[IYONG CONTACT NUMBER]',
   ].join('\n');
 
-  return `https://mail.google.com/mail/?view=cm&fs=1&to=${gl_email}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  return { to: gl_email, subject, body };
+}
+
+// Gmail web compose URL (desktop + browser fallback)
+function buildGmailWebLink(gl_email: string, subject_format: string, documentsList?: string[]) {
+  const { to, subject, body } = buildEmailParts(gl_email, subject_format, documentsList);
+  return `https://mail.google.com/mail/?view=cm&fs=1&to=${to}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
+
+// Handler: tries Gmail app deep link on mobile, falls back to Gmail web
+function openGmail(gl_email: string, subject_format: string, documentsList?: string[]) {
+  const { to, subject, body } = buildEmailParts(gl_email, subject_format, documentsList);
+  const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+  if (isMobile) {
+    // Try Gmail app deep link first
+    const appLink = `googlegmail://co?to=${encodeURIComponent(to)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    const webLink = `https://mail.google.com/mail/?view=cm&fs=1&to=${to}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+    // Open app link; if Gmail app not installed, it will fail silently — open web as backup
+    const start = Date.now();
+    window.location.href = appLink;
+
+    // After 1.2s if still on page, app didn't open → open Gmail web
+    setTimeout(() => {
+      if (Date.now() - start < 2000) {
+        window.open(webLink, '_blank');
+      }
+    }, 1200);
+  } else {
+    // Desktop: open Gmail web compose in new tab
+    const webLink = `https://mail.google.com/mail/?view=cm&fs=1&to=${to}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.open(webLink, '_blank');
+  }
 }
 
 export default function LegislatorsPage() {
@@ -225,16 +260,14 @@ export default function LegislatorsPage() {
                   Walk-in / Facebook lang
                 </button>
               ) : (
-                <a
-                  href={buildGmailLink(leg.gl_email, leg.email_subject_format, checkedDocNames)}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <button
+                  onClick={() => openGmail(leg.gl_email!, leg.email_subject_format, checkedDocNames)}
                   className="btn-primary w-full sm:w-auto py-2 text-sm flex items-center justify-center gap-2"
                   title="Mag-email sa Gmail"
                 >
                   <Mail className="w-4 h-4" />
                   Mag-email gamit ang Gmail
-                </a>
+                </button>
               )}
             </div>
           </div>
