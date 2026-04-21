@@ -278,8 +278,8 @@ export default function LeafletMap({ locations, userLocation }: LeafletMapProps)
                 <div style={{ fontSize: '12px', color: '#64748b', marginBottom: '8px' }}>
                   {loc.branch_name}
                 </div>
-                <div style={{ fontSize: '12px', color: '#374151', marginBottom: '8px' }}>
-                  📍 {loc.address_line}, {loc.city_municipality}
+                <div style={{ fontSize: '12px', color: '#374151', marginBottom: '8px', lineHeight: '1.5' }}>
+                  📍 {loc.address_line}
                 </div>
                 {loc.is_malasakit_center && (
                   <div style={{ background: '#fee2e2', color: '#991b1b', padding: '4px 8px', borderRadius: '6px', fontSize: '11px', fontWeight: 700, marginBottom: '8px' }}>
@@ -366,7 +366,7 @@ export default function LeafletMap({ locations, userLocation }: LeafletMapProps)
           <div className="flex items-center justify-between px-4 py-3 bg-blue-700 text-white rounded-t-2xl shrink-0">
             <div>
               <div className="font-bold text-sm leading-tight">{selectedLocation.branch_name}</div>
-              <div className="text-blue-200 text-xs mt-0.5">{selectedLocation.address_line}, {selectedLocation.city_municipality}</div>
+              <div className="text-blue-200 text-xs mt-0.5" style={{ lineHeight: '1.4' }}>{selectedLocation.address_line}</div>
             </div>
             <button
               onClick={clearRoute}
