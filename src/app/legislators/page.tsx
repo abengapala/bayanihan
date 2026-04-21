@@ -52,30 +52,40 @@ function buildGmailWebLink(gl_email: string, subject_format: string, documentsLi
   return `https://mail.google.com/mail/?view=cm&fs=1&to=${to}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }
 
-// Handler: tries Gmail app deep link on mobile, falls back to Gmail web
+// Handler: opens Gmail app on mobile, Gmail web on desktop
 function openGmail(gl_email: string, subject_format: string, documentsList?: string[]) {
   const { to, subject, body } = buildEmailParts(gl_email, subject_format, documentsList);
-  const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
-  if (isMobile) {
-    // Try Gmail app deep link first
+  const isAndroid = /Android/i.test(navigator.userAgent);
+  const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+  if (isAndroid) {
+    // Android Intent URL — directly opens Gmail app (not just any email app)
+    const intentUrl = `intent://send?to=${encodeURIComponent(to)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}#Intent;package=com.google.android.gm;scheme=mailto;end`;
+    window.location.href = intentUrl;
+
+  } else if (isIOS) {
+    // iOS: try Gmail app via deep link using hidden iframe (avoids navigating away from page)
     const appLink = `googlegmail://co?to=${encodeURIComponent(to)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     const webLink = `https://mail.google.com/mail/?view=cm&fs=1&to=${to}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 
-    // Open app link; if Gmail app not installed, it will fail silently — open web as backup
-    const start = Date.now();
-    window.location.href = appLink;
+    const iframe = document.createElement('iframe');
+    iframe.style.display = 'none';
+    iframe.src = appLink;
+    document.body.appendChild(iframe);
 
-    // After 1.2s if still on page, app didn't open → open Gmail web
+    // After 1.5s, if Gmail app didn't open, fall back to Gmail web
     setTimeout(() => {
-      if (Date.now() - start < 2000) {
-        window.open(webLink, '_blank');
-      }
-    }, 1200);
+      document.body.removeChild(iframe);
+      window.open(webLink, '_blank');
+    }, 1500);
+
   } else {
-    // Desktop: open Gmail web compose in new tab
-    const webLink = `https://mail.google.com/mail/?view=cm&fs=1&to=${to}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    window.open(webLink, '_blank');
+    // Desktop: open Gmail web compose in new tab — this IS the Gmail compose window
+    window.open(
+      `https://mail.google.com/mail/?view=cm&fs=1&to=${to}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`,
+      '_blank'
+    );
   }
 }
 
