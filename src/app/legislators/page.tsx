@@ -61,7 +61,8 @@ function openGmail(gl_email: string, subject_format: string, documentsList?: str
 
   if (isAndroid) {
     // Android Intent URL — directly opens Gmail app (not just any email app)
-    const intentUrl = `intent://send?to=${encodeURIComponent(to)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}#Intent;package=com.google.android.gm;scheme=mailto;end`;
+    const webLink = buildGmailWebLink(gl_email, subject_format, documentsList);
+    const intentUrl = `intent:${encodeURIComponent(to)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}#Intent;scheme=mailto;package=com.google.android.gm;action=android.intent.action.SENDTO;S.browser_fallback_url=${encodeURIComponent(webLink)};end`;
     window.location.href = intentUrl;
 
   } else if (isIOS) {
