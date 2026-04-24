@@ -45,7 +45,7 @@ function buildMapLocations(officeFilter: string) {
         province: 'Metro Manila',
         region: h.region,
         coordinates: h.coordinates,
-        google_maps_url: `https://maps.google.com/?q=${h.coordinates.lat},${h.coordinates.lng}`,
+        google_maps_url: h.google_maps_url ?? `https://maps.google.com/?q=${h.coordinates.lat},${h.coordinates.lng}`,
         is_malasakit_center: h.has_malasakit_center,
         host_hospital_name: h.name,
         landmark_description: h.malasakit_floor_room,
