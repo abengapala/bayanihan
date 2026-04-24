@@ -103,7 +103,8 @@ export default function LegislatorsPage() {
   const { checkedDocuments } = useWizardStore();
   const checkedDocNames = mounted && Array.isArray(checkedDocuments)
     ? assistanceTypes
-        .flatMap(t => t.requirements)
+        .flatMap(t => t.providerRequirements)
+        .flatMap(p => p.requirements)
         .filter(req => checkedDocuments.includes(req.id))
         .map(req => req.label)
     : [];

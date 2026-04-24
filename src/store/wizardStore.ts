@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { PatientStatus, HospitalTypeEnum, AssistanceCategory, OfficeLocation, AssistanceProvider } from '@/data/types';
+import { PatientStatus, HospitalTypeEnum, AssistanceCategory, OfficeLocation, AssistanceProvider, ProviderChannel } from '@/data/types';
 
 export interface NearestOffice extends OfficeLocation {
   distance?: number;
@@ -12,6 +12,7 @@ export interface WizardState {
   patientStatus: PatientStatus | null;
   hospitalType: HospitalTypeEnum | null;
   assistanceCategory: AssistanceCategory | null;
+  selectedChannel: ProviderChannel | null;
   checkedDocuments: string[]; // Array for JSON serialization compatibility
   userLocation: { lat: number; lng: number } | null;
   nearestOffices: NearestOffice[];
@@ -22,6 +23,7 @@ export interface WizardState {
   prevStep: () => void;
   setPatientSituation: (status: PatientStatus, type: HospitalTypeEnum) => void;
   setAssistanceCategory: (category: AssistanceCategory) => void;
+  setSelectedChannel: (channel: ProviderChannel) => void;
   toggleDocument: (docId: string) => void;
   setUserLocation: (lat: number, lng: number) => void;
   setNearestOffices: (offices: NearestOffice[]) => void;
@@ -33,6 +35,7 @@ const defaultState = {
   patientStatus: null as PatientStatus | null,
   hospitalType: null as HospitalTypeEnum | null,
   assistanceCategory: null as AssistanceCategory | null,
+  selectedChannel: null as ProviderChannel | null,
   checkedDocuments: [] as string[],
   userLocation: null as { lat: number; lng: number } | null,
   nearestOffices: [] as NearestOffice[],
@@ -54,6 +57,13 @@ export const useWizardStore = create<WizardState>()(
 
       setAssistanceCategory: (category) => set({
         assistanceCategory: category,
+        selectedChannel: null,
+        checkedDocuments: [],
+      }),
+
+      setSelectedChannel: (channel) => set({
+        selectedChannel: channel,
+        checkedDocuments: [],
       }),
 
       toggleDocument: (docId) => set((state) => {

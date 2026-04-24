@@ -21,12 +21,21 @@ export interface AssistanceRequirement {
   isRequired: boolean;
 }
 
+export type ProviderChannel = 'pcso' | 'dswd' | 'senator';
+
+export interface ProviderRequirements {
+  channel: ProviderChannel;
+  label: string;
+  icon: string;
+  requirements: AssistanceRequirement[];
+}
+
 export interface AssistanceType {
   id: string;
   title: string;
   titleEnglish: string;
   icon: string;
-  requirements: AssistanceRequirement[];
+  providerRequirements: ProviderRequirements[];
 }
 
 export interface AgencyContact {
