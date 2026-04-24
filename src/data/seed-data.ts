@@ -3,5 +3,5 @@
 
 export { providers } from './providers-data';
 export { offices } from './offices-data';
-export { requirements } from './requirements-data';
+export { assistanceTypes, dswdContact, additionalAgencies } from './requirements-data';
 export { legislators, hospitals } from './legislators-hospitals-data';

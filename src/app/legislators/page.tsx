@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { legislators, requirements } from '@/data/seed-data';
+import { legislators, assistanceTypes } from '@/data/seed-data';
 import { useWizardStore } from '@/store/wizardStore';
 import { Mail, AlertTriangle, Users, Clock, ExternalLink, Copy, Check } from 'lucide-react';
 import { ReportWrongInfo } from '@/components/ui/ReportWrongInfo';
@@ -101,9 +101,12 @@ export default function LegislatorsPage() {
   
   // Pull checked documents from Wizard state (only after mount to avoid SSR hydration mismatch)
   const { checkedDocuments } = useWizardStore();
-  const checkedDocNames = mounted && Array.isArray(checkedDocuments) ? requirements
-    .filter(req => checkedDocuments.includes(req.id))
-    .map(req => req.document_name_fil) : [];
+  const checkedDocNames = mounted && Array.isArray(checkedDocuments)
+    ? assistanceTypes
+        .flatMap(t => t.requirements)
+        .filter(req => checkedDocuments.includes(req.id))
+        .map(req => req.label)
+    : [];
 
   const filteredLegislators = legislators.filter(leg => {
     if (filter === 'senator') return leg.legislator_type === 'senator';

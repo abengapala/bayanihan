@@ -2,20 +2,14 @@
 
 import React from 'react';
 import { useWizardStore } from '@/store/wizardStore';
-import { AssistanceCategory } from '@/data/types';
-import { Syringe, Pill, Droplets, Bed, HeartPulse, ActivitySquare } from 'lucide-react';
+import { assistanceTypes } from '@/data/seed-data';
 
 export function StepAssistanceType() {
   const { assistanceCategory, setAssistanceCategory, nextStep } = useWizardStore();
 
-  const categories: { id: AssistanceCategory; labelFil: string; labelEn: string; icon: any }[] = [
-    { id: 'surgery', labelFil: 'Operasyon', labelEn: 'Surgery', icon: ActivitySquare },
-    { id: 'chemotherapy', labelFil: 'Chemotherapy', labelEn: 'Cancer Treatment', icon: HeartPulse },
-    { id: 'dialysis', labelFil: 'Dialysis', labelEn: 'Hemodialysis', icon: Droplets },
-    { id: 'medicines', labelFil: 'Gamot', labelEn: 'Medicines', icon: Pill },
-    { id: 'confinement', labelFil: 'Pag-confine', labelEn: 'Hospital Bill', icon: Bed },
-    { id: 'others', labelFil: 'Iba pa', labelEn: 'Labs / Procedures', icon: Syringe },
-  ];
+  const handleSelect = (id: string) => {
+    setAssistanceCategory(id as any);
+  };
 
   const handleNext = () => {
     if (assistanceCategory) {
@@ -27,28 +21,27 @@ export function StepAssistanceType() {
     <div className="flex flex-col h-full animate-slide-in-right">
       <h2 className="text-xl font-bold mb-2">Anong tulong ang kailangan?</h2>
       <p className="text-slate-500 mb-6">Piliin ang pinaka-pangunahing dahilan kung bakit humihingi ng Guarantee Letter.</p>
-      
+
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4 mb-8">
-        {categories.map((cat) => {
-          const isSelected = assistanceCategory === cat.id;
-          const Icon = cat.icon;
-          
+        {assistanceTypes.map((type) => {
+          const isSelected = assistanceCategory === type.id;
+
           return (
             <button
-              key={cat.id}
-              onClick={() => setAssistanceCategory(cat.id)}
+              key={type.id}
+              onClick={() => handleSelect(type.id)}
               className={`card p-4 flex flex-col items-center justify-center gap-2 text-center border-2 transition-all ${
-                isSelected 
-                  ? 'border-bayani-blue-500 bg-bayani-blue-50/50 scale-[1.02] shadow-md' 
+                isSelected
+                  ? 'border-bayani-blue-500 bg-bayani-blue-50/50 scale-[1.02] shadow-md'
                   : 'border-transparent hover:border-bayani-blue-200'
               }`}
             >
-              <div className={`p-3 rounded-full ${isSelected ? 'bg-bayani-blue-100' : 'bg-slate-100'}`}>
-                <Icon className={`w-6 h-6 ${isSelected ? 'text-bayani-blue-600' : 'text-slate-500'}`} />
+              <div className={`w-12 h-12 flex items-center justify-center text-2xl rounded-full ${isSelected ? 'bg-bayani-blue-100' : 'bg-slate-100'}`}>
+                {type.icon}
               </div>
               <div>
-                <div className="font-bold text-sm md:text-base text-slate-800 leading-tight mb-0.5">{cat.labelFil}</div>
-                <div className="text-xs text-slate-500">{cat.labelEn}</div>
+                <div className="font-bold text-sm md:text-base text-slate-800 leading-tight mb-0.5">{type.title}</div>
+                <div className="text-xs text-slate-500">{type.titleEnglish}</div>
               </div>
             </button>
           );
@@ -56,8 +49,8 @@ export function StepAssistanceType() {
       </div>
 
       <div className="mt-auto flex justify-end pt-4 border-t border-slate-100">
-        <button 
-          onClick={handleNext} 
+        <button
+          onClick={handleNext}
           disabled={!assistanceCategory}
           className="btn-primary w-full sm:w-auto"
         >

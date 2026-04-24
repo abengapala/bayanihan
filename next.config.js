@@ -47,6 +47,22 @@ const nextConfig = {
     domains: ["your-project.supabase.co"],
     unoptimized: true,
   },
+  webpack: (config, { isServer }) => {
+    // Suppress Windows system-file EINVAL watchpack errors
+    config.watchOptions = {
+      ...config.watchOptions,
+      ignored: [
+        '**/node_modules/**',
+        '**/.git/**',
+        '**/.next/**',
+        'C:/DumpStack.log.tmp',
+        'C:/hiberfil.sys',
+        'C:/swapfile.sys',
+        'C:/pagefile.sys',
+      ],
+    };
+    return config;
+  },
 };
 
 module.exports = withPWA(nextConfig);

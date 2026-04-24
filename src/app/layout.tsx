@@ -34,13 +34,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fil" className={inter.variable}>
-      <body className="flex flex-col min-h-[100dvh]">
+      <body className="flex flex-col min-h-[100dvh] bg-slate-50">
         <I18nProvider>
-          <EmergencyHotlines />
-          <OfflineBanner />
-          <Navbar />
-          <main className="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-10">
+          <header className="sticky top-0 z-40 bg-transparent">
+            <EmergencyHotlines />
+            <OfflineBanner />
+            <Navbar />
+          </header>
+          <main className="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-3 pb-6 md:py-10">
             {children}
+            {/* Mobile: spacer so content clears the fixed bottom nav */}
+            <div className="md:hidden h-20" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }} aria-hidden="true" />
           </main>
           <Footer />
         </I18nProvider>

@@ -14,6 +14,31 @@ export type HospitalType = 'public' | 'private' | 'government_corporate';
 export type OfficeStatus = 'active' | 'closed' | 'relocated';
 export type FlagReason = 'wrong_info' | 'office_closed' | 'email_invalid' | 'other';
 
+export interface AssistanceRequirement {
+  id: string;
+  label: string;
+  note: string | null;
+  isRequired: boolean;
+}
+
+export interface AssistanceType {
+  id: string;
+  title: string;
+  titleEnglish: string;
+  icon: string;
+  requirements: AssistanceRequirement[];
+}
+
+export interface AgencyContact {
+  id: string;
+  name: string;
+  fullName: string;
+  telephone: string[];
+  mobile?: string[];
+  email: string;
+  note: string;
+}
+
 export interface AssistanceProvider {
   id: string;
   name_en: string;
@@ -114,6 +139,7 @@ export interface Hospital {
   accepts_philhealth: boolean;
   indigent_services_available: boolean;
   social_worker_contact: string | null;
+  google_maps_url?: string | null;
 }
 
 export interface CommunityFlag {

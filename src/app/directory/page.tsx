@@ -3,19 +3,21 @@
 import React, { useState } from 'react';
 import { providers, offices } from '@/data/seed-data';
 import { StatusBadge } from '@/components/ui/StatusBadge';
-import { Search, MapPin, Phone, Building2 } from 'lucide-react';
+import { HowToApplyModal } from '@/components/ui/HowToApplyModal';
+import { Search, MapPin, Phone, Building2, BookOpen } from 'lucide-react';
 
 export default function DirectoryPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState<string>('all');
+  const [activeGuide, setActiveGuide] = useState<{ providerId: string; providerName: string } | null>(null);
 
   const filteredOffices = offices.filter(office => {
     const provider = providers.find(p => p.id === office.provider_id);
-    const matchesSearch = 
+    const matchesSearch =
       office.branch_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       office.city_municipality.toLowerCase().includes(searchTerm.toLowerCase()) ||
       provider?.name_fil.toLowerCase().includes(searchTerm.toLowerCase());
-    
+
     const matchesFilter = filterType === 'all' || provider?.provider_type === filterType;
 
     return matchesSearch && matchesFilter;
@@ -23,6 +25,12 @@ export default function DirectoryPage() {
 
   return (
     <div className="flex flex-col gap-6 animate-fade-in">
+      <HowToApplyModal
+        providerId={activeGuide?.providerId ?? null}
+        providerName={activeGuide?.providerName ?? ''}
+        onClose={() => setActiveGuide(null)}
+      />
+
       <div className="mb-2">
         <h1 className="text-3xl font-bold mb-2 text-bayani-blue-900">Office Directory</h1>
         <p className="text-slate-500">Hanapin ang mga opisina ng PCSO, DSWD, at iba pang ahensya.</p>
@@ -43,19 +51,19 @@ export default function DirectoryPage() {
         </div>
 
         <div className="flex overflow-x-auto no-scrollbar gap-2 pb-2 md:pb-0">
-          <button 
+          <button
             onClick={() => setFilterType('all')}
             className={`filter-chip ${filterType === 'all' ? 'filter-chip-active' : ''}`}
           >
             Lahat
           </button>
-          <button 
+          <button
             onClick={() => setFilterType('government')}
             className={`filter-chip ${filterType === 'government' ? 'filter-chip-active' : ''}`}
           >
             Gobyerno
           </button>
-          <button 
+          <button
             onClick={() => setFilterType('ngo')}
             className={`filter-chip ${filterType === 'ngo' ? 'filter-chip-active' : ''}`}
           >
@@ -74,18 +82,18 @@ export default function DirectoryPage() {
         ) : (
           filteredOffices.map(office => {
             const provider = providers.find(p => p.id === office.provider_id);
-            
+
             return (
               <div key={office.id} className="card flex flex-col h-full">
                 <div className="mb-4">
                   <div className="flex justify-between items-start mb-2 gap-2">
                     <h3 className="font-bold text-lg text-slate-800 leading-tight">
-                      {provider?.acronym || provider?.name_fil} - {office.branch_name}
+                      {provider?.acronym || provider?.name_fil} — {office.branch_name}
                     </h3>
                     <StatusBadge status={office.status} />
                   </div>
                   <p className="text-sm font-medium text-bayani-blue-600 mb-3">{provider?.name_en}</p>
-                  
+
                   <div className="space-y-2 text-sm text-slate-600">
                     <div className="flex items-start gap-2">
                       <MapPin className="w-4 h-4 shrink-0 mt-0.5 text-slate-400" />
@@ -103,13 +111,22 @@ export default function DirectoryPage() {
                 </div>
 
                 <div className="mt-auto pt-4 border-t border-slate-100 flex gap-2">
-                  <button className="btn-secondary py-2 flex-1 text-sm bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100 hover:text-slate-900">
-                    Detalye
+                  {/* How to Apply button */}
+                  <button
+                    onClick={() => setActiveGuide({
+                      providerId: office.provider_id,
+                      providerName: provider?.name_en ?? office.branch_name,
+                    })}
+                    className="btn-secondary py-2 flex-1 text-sm bg-slate-50 border-slate-200 text-slate-700 hover:bg-bayani-blue-50 hover:text-bayani-blue-700 hover:border-bayani-blue-200 flex items-center justify-center gap-1.5"
+                  >
+                    <BookOpen className="w-3.5 h-3.5" />
+                    Paano Mag-apply
                   </button>
+
                   {office.google_maps_url && (
-                    <a 
-                      href={office.google_maps_url} 
-                      target="_blank" 
+                    <a
+                      href={office.google_maps_url}
+                      target="_blank"
                       rel="noopener noreferrer"
                       className="btn-primary flex-1 py-2 text-sm"
                     >
