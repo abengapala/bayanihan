@@ -5,6 +5,7 @@ import { useWizardStore } from '@/store/wizardStore';
 import { assistanceTypes } from '@/data/seed-data';
 import { ProviderChannel } from '@/data/types';
 import { Check, Info, FileText, AlertCircle, Printer, X } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const CHANNEL_ORDER: ProviderChannel[] = ['pcso', 'dswd', 'senator'];
 
@@ -14,6 +15,7 @@ function MissingDocsModal({ missing, onClose, onProceed }: {
   onClose: () => void;
   onProceed: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm px-4">
       <div className="bg-white rounded-2xl shadow-2xl border border-red-100 w-full max-w-sm animate-fade-in">
@@ -22,8 +24,8 @@ function MissingDocsModal({ missing, onClose, onProceed }: {
             <AlertCircle className="w-5 h-5 text-red-600" />
           </div>
           <div>
-            <h3 className="font-bold text-slate-800">Hindi pa kumpleto!</h3>
-            <p className="text-xs text-slate-500">May mga importanteng dokumento na hindi pa naka-check.</p>
+            <h3 className="font-bold text-slate-800">{t('wizard.step3.missingTitle')}</h3>
+            <p className="text-xs text-slate-500">{t('wizard.step3.missingSub')}</p>
           </div>
           <button onClick={onClose} className="ml-auto text-slate-400 hover:text-slate-600">
             <X className="w-4 h-4" />
@@ -31,7 +33,7 @@ function MissingDocsModal({ missing, onClose, onProceed }: {
         </div>
 
         <div className="p-5">
-          <p className="text-sm text-slate-600 mb-3 font-medium">Mga dokumento na kailangan pa:</p>
+          <p className="text-sm text-slate-600 mb-3 font-medium">{t('wizard.step3.missingList')}</p>
           <ul className="space-y-2 mb-5">
             {missing.map((label, i) => (
               <li key={i} className="flex items-start gap-2 text-sm">
@@ -42,17 +44,14 @@ function MissingDocsModal({ missing, onClose, onProceed }: {
           </ul>
 
           <div className="flex flex-col gap-2">
-            <button
-              onClick={onClose}
-              className="btn-primary w-full py-2.5 text-sm"
-            >
-              Bumalik at kumpletuhin
+            <button onClick={onClose} className="btn-primary w-full py-2.5 text-sm">
+              {t('wizard.step3.goBack')}
             </button>
             <button
               onClick={onProceed}
               className="text-xs text-slate-400 hover:text-slate-600 underline text-center py-1"
             >
-              Ituloy kahit kulang (hindi recommended)
+              {t('wizard.step3.proceedAnyway')}
             </button>
           </div>
         </div>
@@ -71,17 +70,16 @@ export function StepRequirements() {
     toggleDocument,
     nextStep,
   } = useWizardStore();
+  const { t } = useTranslation();
 
   const [showMissingModal, setShowMissingModal] = useState(false);
   const [missingDocs, setMissingDocs] = useState<string[]>([]);
 
-  // Find the selected assistance type
   const selectedType = useMemo(() =>
     assistanceTypes.find(t => t.id === assistanceCategory) ?? null,
     [assistanceCategory]
   );
 
-  // Get requirements for current channel
   const currentProviderReqs = useMemo(() => {
     if (!selectedType || !selectedChannel) return null;
     return selectedType.providerRequirements.find(p => p.channel === selectedChannel) ?? null;
@@ -123,7 +121,7 @@ export function StepRequirements() {
         {/* Header */}
         <div className="flex justify-between items-start mb-3">
           <div>
-            <h2 className="text-xl font-bold">Mga Kailangang Dokumento</h2>
+            <h2 className="text-xl font-bold">{t('wizard.step3.title')}</h2>
             {selectedType && (
               <p className="text-sm text-slate-500 mt-0.5">
                 <span className="mr-1">{selectedType.icon}</span>
@@ -133,7 +131,7 @@ export function StepRequirements() {
           </div>
           {selectedChannel && (
             <div className="text-sm font-bold text-bayani-blue-600 bg-bayani-blue-50 px-3 py-1 rounded-full shrink-0">
-              {checkedRequired.length} / {requiredReqs.length} Required
+              {checkedRequired.length} / {requiredReqs.length} {t('wizard.step3.progress')}
             </div>
           )}
         </div>
@@ -141,7 +139,7 @@ export function StepRequirements() {
         {/* Channel Selector Tabs */}
         {selectedType && (
           <div className="mb-4">
-            <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">Saan ka mag-a-apply?</p>
+            <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">{t('wizard.step3.whereApply')}</p>
             <div className="grid grid-cols-3 gap-2">
               {CHANNEL_ORDER.map(ch => {
                 const provReq = selectedType.providerRequirements.find(p => p.channel === ch);
@@ -172,14 +170,12 @@ export function StepRequirements() {
         {!selectedChannel ? (
           <div className="flex-1 flex flex-col items-center justify-center text-center p-8 bg-slate-50 rounded-xl border border-dashed border-slate-300">
             <FileText className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-            <p className="text-slate-500 font-medium">Pumili muna kung saan ka mag-a-apply</p>
-            <p className="text-xs text-slate-400 mt-1">PCSO, DSWD, o Senador / Party-list</p>
+            <p className="text-slate-500 font-medium">{t('wizard.step3.noChannel')}</p>
+            <p className="text-xs text-slate-400 mt-1">{t('wizard.step3.noChannelSub')}</p>
           </div>
         ) : (
           <>
-            <p className="text-sm text-slate-500 mb-3">
-              I-check ang kahon kapag nakuha mo na ang dokumento.
-            </p>
+            <p className="text-sm text-slate-500 mb-3">{t('wizard.step3.checkInstruction')}</p>
 
             {/* Progress Bar */}
             <div className="w-full bg-slate-100 rounded-full h-2 mb-4 overflow-hidden">
@@ -210,12 +206,12 @@ export function StepRequirements() {
                         <h3 className="font-bold text-slate-800 leading-tight text-sm">{req.label}</h3>
                         {!req.isRequired && (
                           <span className="text-[10px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full font-medium shrink-0">
-                            Optional
+                            {t('wizard.step3.optional')}
                           </span>
                         )}
                         {req.isRequired && !isChecked && (
                           <span className="text-[10px] bg-red-50 text-red-600 border border-red-200 px-2 py-0.5 rounded-full font-medium shrink-0">
-                            Kailangan
+                            {t('wizard.step3.required')}
                           </span>
                         )}
                       </div>
@@ -238,7 +234,7 @@ export function StepRequirements() {
           <button
             onClick={() => window.print()}
             className="btn-secondary py-2 px-4 text-sm flex items-center gap-1.5"
-            aria-label="I-print ang Checklist"
+            aria-label="Print Checklist"
           >
             <Printer className="w-4 h-4" /> Print
           </button>
@@ -248,7 +244,7 @@ export function StepRequirements() {
             disabled={!selectedChannel}
             className="btn-primary flex-1 py-2.5 text-sm"
           >
-            Saan Pupunta →
+            {t('wizard.step3.next')}
           </button>
         </div>
       </div>

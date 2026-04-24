@@ -6,26 +6,101 @@
     "map": "Map",
     "senators": "Senators"
   },
+  "home": {
+    "badge": "Free Medical Assistance Guide",
+    "headline": "Where Can You Get",
+    "headlineHighlight": "Medical Assistance?",
+    "subtitle": "A centralized guide for Filipinos who need a Guarantee Letter (GL) and financial assistance from PCSO, DSWD, and Malasakit Centers.",
+    "ctaWizard": "Find the Documents",
+    "ctaDirectory": "View the Directory",
+    "feat1Title": "Requirements Wizard",
+    "feat1Desc": "Find out what documents you need based on your situation.",
+    "feat2Title": "Office Directory",
+    "feat2Desc": "Find the exact address of government branches and NGOs.",
+    "feat3Title": "Interactive Map",
+    "feat3Desc": "View the nearest Malasakit Centers on a map.",
+    "feat4Title": "Senators",
+    "feat4Desc": "List of senators who provide medical Guarantee Letters.",
+    "glTitle": "What is a Guarantee Letter (GL)?",
+    "glDesc": "A Guarantee Letter (GL) is a formal letter from a government agency or official guaranteeing that they will pay part or all of your hospital bill or medicine. With the 2026 GAA \"Anti-Epal\" provisions, access to assistance directly in hospitals has been made easier.",
+    "glLink": "Read the complete guide",
+    "statsAgency": "Agencies",
+    "statsOffice": "Offices",
+    "statsMalasakit": "Malasakit Centers",
+    "statsOffline": "Offline Access"
+  },
   "wizard": {
     "title": "Requirements Checker",
     "step1": {
       "title": "What is the patient's situation?",
-      "confined": "Confined / Admitted",
-      "outpatient": "Outpatient",
-      "public": "Public Hospital",
-      "private": "Private Hospital"
+      "subtitle": "Choose the appropriate situation to know the required documents.",
+      "confinedLabel": "Confined / Admitted",
+      "confinedSub": "Inside the hospital (Admitted)",
+      "outpatientLabel": "Outpatient",
+      "outpatientSub": "Just for a check-up or to get medicine",
+      "hospitalType": "What type of hospital?",
+      "public": "Public",
+      "publicSub": "Government / Public Hospital",
+      "private": "Private",
+      "privateSub": "Private Hospital",
+      "next": "Next"
     },
     "step2": {
-      "title": "What assistance do you need?"
+      "title": "What assistance do you need?",
+      "subtitle": "Choose the main reason you are requesting a Guarantee Letter.",
+      "next": "View the Documents"
     },
     "step3": {
-      "title": "Required Documents"
+      "title": "Required Documents",
+      "whereApply": "Where will you apply?",
+      "checkInstruction": "Check the box once you have the document.",
+      "required": "Required",
+      "optional": "Optional",
+      "missingTitle": "Not yet complete!",
+      "missingSub": "Some important documents are not checked yet.",
+      "missingList": "Documents still needed:",
+      "goBack": "Go back and complete",
+      "proceedAnyway": "Continue anyway (not recommended)",
+      "noChannel": "Choose where you will apply first",
+      "noChannelSub": "PCSO, DSWD, or Senator / Party-list",
+      "progress": "Required",
+      "next": "Where to Go →"
     },
     "step4": {
-      "title": "Nearest Offices"
+      "title": "Nearest Offices",
+      "subtitle": "Bring your complete documents to these offices.",
+      "useLocation": "Use My Location",
+      "locating": "Locating...",
+      "geoError": "Could not get your location. Make sure GPS is on.",
+      "geoUnsupported": "Your browser does not support geolocation.",
+      "directions": "How to Get There:",
+      "call": "Call:",
+      "emailTitle": "Send an Email Request",
+      "emailDesc": "If you cannot go in person, you can request medical assistance from Senators or Party-List online. The system will automatically include the documents you checked in the email template!",
+      "chooseOfficial": "Choose an Official"
     },
     "next": "Next",
     "back": "Back"
+  },
+  "directory": {
+    "title": "Office Directory",
+    "subtitle": "Find the offices of PCSO, DSWD, and other agencies.",
+    "searchPlaceholder": "Search for an office or location...",
+    "all": "All",
+    "government": "Government",
+    "ngo": "NGO",
+    "noResults": "Nothing Found",
+    "noResultsSub": "Try changing your search.",
+    "howToApply": "How to Apply",
+    "map": "Map"
+  },
+  "footer": {
+    "tagline": "An initiative to make it easier for every Filipino to find medical assistance.",
+    "quickLinks": "Quick Links",
+    "aboutGL": "What is a GL?",
+    "disclaimer": "Important Notice",
+    "disclaimerText": "Information here may change without notice. Always contact your hospital's official social workers or visit the Malasakit Center for the official and latest process. We are not an official government agency.",
+    "madeBy": "Made by Filipinos."
   },
   "common": {
     "loading": "Loading...",

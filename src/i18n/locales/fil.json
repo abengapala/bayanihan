@@ -6,26 +6,101 @@
     "map": "Mapa",
     "senators": "Mga Senador"
   },
+  "home": {
+    "badge": "Libreng Medical Assistance Guide",
+    "headline": "Saan Ka Kukuha ng",
+    "headlineHighlight": "Tulong Medikal?",
+    "subtitle": "Isang sentralisadong gabay para sa mga Pilipinong nangangailangan ng Guarantee Letter (GL) at tulong pinansyal mula sa PCSO, DSWD, at Malasakit Centers.",
+    "ctaWizard": "Hanapin ang mga Dokumento",
+    "ctaDirectory": "Tingnan ang Directory",
+    "feat1Title": "Requirements Wizard",
+    "feat1Desc": "Alamin kung anong mga papeles ang kailangan para sa iyong sitwasyon.",
+    "feat2Title": "Office Directory",
+    "feat2Desc": "Hanapin ang eksaktong address ng mga sangay ng gobyerno at NGOs.",
+    "feat3Title": "Interactive Map",
+    "feat3Desc": "Tingnan sa mapa ang mga pinakamalapit na Malasakit Centers.",
+    "feat4Title": "Mga Senador",
+    "feat4Desc": "Listahan ng mga senador na nagbibigay ng medical GL.",
+    "glTitle": "Ano ang Guarantee Letter (GL)?",
+    "glDesc": "Ang Guarantee Letter (GL) ay isang pormal na sulat mula sa isang ahensya ng gobyerno o opisyal na nagsisigurong sila ang magbabayad ng bahagi o buong halaga ng iyong hospital bill o gamot. Dahil sa 2026 GAA \"Anti-Epal\" provisions, mas pinadali na ang pag-access sa tulong diretso sa mga ospital.",
+    "glLink": "Basahin ang kumpletong gabay",
+    "statsAgency": "Ahensya",
+    "statsOffice": "Opisina",
+    "statsMalasakit": "Malasakit Centers",
+    "statsOffline": "Offline Access"
+  },
   "wizard": {
     "title": "Requirements Checker",
     "step1": {
       "title": "Ano ang sitwasyon ng pasyente?",
-      "confined": "Naka-confine",
-      "outpatient": "Outpatient",
+      "subtitle": "Piliin ang naaangkop na sitwasyon para malaman ang tamang dokumento.",
+      "confinedLabel": "Naka-confine",
+      "confinedSub": "Nasa loob ng ospital (Admitted)",
+      "outpatientLabel": "Outpatient",
+      "outpatientSub": "Pumunta lang para magpa-checkup o kumuha ng gamot",
+      "hospitalType": "Anong uri ng ospital?",
       "public": "Pampubliko",
-      "private": "Pribado"
+      "publicSub": "Government/Public Hospital",
+      "private": "Pribado",
+      "privateSub": "Private Hospital",
+      "next": "Susunod"
     },
     "step2": {
-      "title": "Anong tulong ang kailangan?"
+      "title": "Anong tulong ang kailangan?",
+      "subtitle": "Piliin ang pinaka-pangunahing dahilan kung bakit humihingi ng Guarantee Letter.",
+      "next": "Tingnan ang Dokumento"
     },
     "step3": {
-      "title": "Mga Kailangang Dokumento"
+      "title": "Mga Kailangang Dokumento",
+      "whereApply": "Saan ka mag-a-apply?",
+      "checkInstruction": "I-check ang kahon kapag nakuha mo na ang dokumento.",
+      "required": "Kailangan",
+      "optional": "Opsyonal",
+      "missingTitle": "Hindi pa kumpleto!",
+      "missingSub": "May mga importanteng dokumento na hindi pa naka-check.",
+      "missingList": "Mga dokumento na kailangan pa:",
+      "goBack": "Bumalik at kumpletuhin",
+      "proceedAnyway": "Ituloy kahit kulang (hindi recommended)",
+      "noChannel": "Pumili muna kung saan ka mag-a-apply",
+      "noChannelSub": "PCSO, DSWD, o Senador / Party-list",
+      "progress": "Required",
+      "next": "Saan Pupunta →"
     },
     "step4": {
-      "title": "Pinakamalapit na Opisina"
+      "title": "Pinakamalapit na Opisina",
+      "subtitle": "Dalhin ang mga kumpletong dokumento sa mga opisina na ito.",
+      "useLocation": "Gamitin ang aking Lokasyon",
+      "locating": "Hinahanap...",
+      "geoError": "Hindi makuha ang iyong lokasyon. Siguraduhing naka-on ang GPS.",
+      "geoUnsupported": "Hindi suportado ng iyong browser ang geolocation.",
+      "directions": "Paano Pumunta:",
+      "call": "Tawagan:",
+      "emailTitle": "Magpadala ng Email Request",
+      "emailDesc": "Kung hindi ka makakapunta nang personal, maaari kang humingi ng tulong medikal sa mga Senador o Party-List online. Awtomatikong isasama ng system ang mga dokumentong chineck mo sa email template!",
+      "chooseOfficial": "Pumili ng Opisyal"
     },
     "next": "Susunod",
     "back": "Bumalik"
+  },
+  "directory": {
+    "title": "Office Directory",
+    "subtitle": "Hanapin ang mga opisina ng PCSO, DSWD, at iba pang ahensya.",
+    "searchPlaceholder": "Maghanap ng opisina o lokasyon...",
+    "all": "Lahat",
+    "government": "Gobyerno",
+    "ngo": "NGO",
+    "noResults": "Walang Nahanap",
+    "noResultsSub": "Subukang ibahin ang iyong hinahanap.",
+    "howToApply": "Paano Mag-apply",
+    "map": "Mapa"
+  },
+  "footer": {
+    "tagline": "Isang inisyatibo upang mas mapadali ang paghanap ng tulong medikal para sa bawat Pilipino.",
+    "quickLinks": "Mabilisang Link",
+    "aboutGL": "Ano ang GL?",
+    "disclaimer": "Mahalagang Paalala",
+    "disclaimerText": "Ang mga impormasyon dito ay maaaring magbago nang walang abiso. Palaging makipag-ugnayan sa official social workers ng inyong ospital o pumunta sa Malasakit Center para sa opisyal at pinakabagong proseso. Hindi kami opisyal na ahensya ng gobyerno.",
+    "madeBy": "Gawang Pilipino."
   },
   "common": {
     "loading": "Naglo-load...",

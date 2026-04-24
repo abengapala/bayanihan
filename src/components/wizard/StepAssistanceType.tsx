@@ -3,9 +3,11 @@
 import React from 'react';
 import { useWizardStore } from '@/store/wizardStore';
 import { assistanceTypes } from '@/data/seed-data';
+import { useTranslation } from 'react-i18next';
 
 export function StepAssistanceType() {
   const { assistanceCategory, setAssistanceCategory, nextStep } = useWizardStore();
+  const { t } = useTranslation();
 
   const handleSelect = (id: string) => {
     setAssistanceCategory(id as any);
@@ -19,8 +21,8 @@ export function StepAssistanceType() {
 
   return (
     <div className="flex flex-col h-full animate-slide-in-right">
-      <h2 className="text-xl font-bold mb-2">Anong tulong ang kailangan?</h2>
-      <p className="text-slate-500 mb-6">Piliin ang pinaka-pangunahing dahilan kung bakit humihingi ng Guarantee Letter.</p>
+      <h2 className="text-xl font-bold mb-2">{t('wizard.step2.title')}</h2>
+      <p className="text-slate-500 mb-6">{t('wizard.step2.subtitle')}</p>
 
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4 mb-8">
         {assistanceTypes.map((type) => {
@@ -54,7 +56,7 @@ export function StepAssistanceType() {
           disabled={!assistanceCategory}
           className="btn-primary w-full sm:w-auto"
         >
-          Tingnan ang Dokumento
+          {t('wizard.step2.next')}
         </button>
       </div>
     </div>

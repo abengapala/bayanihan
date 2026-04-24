@@ -6,10 +6,10 @@ import { offices as allOffices, providers as allProviders } from '@/data/seed-da
 import { MapPin, Navigation, Phone, ExternalLink } from 'lucide-react';
 import { StatusBadge } from '@/components/ui/StatusBadge';
 import { VerificationWarning } from '@/components/ui/VerificationWarning';
+import { useTranslation } from 'react-i18next';
 
-// Haversine formula to calculate distance between two coordinates
 function getDistanceFromLatLonInKm(lat1: number, lon1: number, lat2: number, lon2: number) {
-  const R = 6371; // Radius of the earth in km
+  const R = 6371;
   const dLat = deg2rad(lat2 - lat1);
   const dLon = deg2rad(lon2 - lon1);
   const a =
@@ -17,8 +17,7 @@ function getDistanceFromLatLonInKm(lat1: number, lon1: number, lat2: number, lon
     Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
     Math.sin(dLon / 2) * Math.sin(dLon / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  const d = R * c; // Distance in km
-  return d;
+  return R * c;
 }
 
 function deg2rad(deg: number) {
@@ -29,9 +28,9 @@ export function StepNearestOffice() {
   const { userLocation, setUserLocation, nearestOffices, setNearestOffices } = useWizardStore();
   const [isLocating, setIsLocating] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const { t } = useTranslation();
 
   useEffect(() => {
-    // If we haven't asked for location yet, let's just show all offices by default initially
     if (!userLocation && nearestOffices.length === 0) {
       const mergedOffices = allOffices.map(office => ({
         ...office,
@@ -46,7 +45,7 @@ export function StepNearestOffice() {
     setErrorMsg(null);
 
     if (!navigator.geolocation) {
-      setErrorMsg('Hindi suportado ng iyong browser ang geolocation.');
+      setErrorMsg(t('wizard.step4.geoUnsupported'));
       setIsLocating(false);
       return;
     }
@@ -55,8 +54,7 @@ export function StepNearestOffice() {
       (position) => {
         const { latitude, longitude } = position.coords;
         setUserLocation(latitude, longitude);
-        
-        // Calculate distances and sort
+
         const sorted = allOffices
           .map(office => ({
             ...office,
@@ -64,14 +62,14 @@ export function StepNearestOffice() {
             provider: allProviders.find(p => p.id === office.provider_id)
           }))
           .sort((a, b) => (a.distance || 0) - (b.distance || 0))
-          .slice(0, 5); // Take top 5
+          .slice(0, 5);
 
         setNearestOffices(sorted);
         setIsLocating(false);
       },
       (error) => {
         console.error('Error getting location', error);
-        setErrorMsg('Hindi makuha ang iyong lokasyon. Siguraduhing naka-on ang GPS.');
+        setErrorMsg(t('wizard.step4.geoError'));
         setIsLocating(false);
       },
       { timeout: 10000, enableHighAccuracy: true }
@@ -82,17 +80,17 @@ export function StepNearestOffice() {
     <div className="flex flex-col h-full animate-slide-in-right">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
         <div>
-          <h2 className="text-xl font-bold">Pinakamalapit na Opisina</h2>
-          <p className="text-slate-500 text-sm">Dalhin ang mga kumpletong dokumento sa mga opisina na ito.</p>
+          <h2 className="text-xl font-bold">{t('wizard.step4.title')}</h2>
+          <p className="text-slate-500 text-sm">{t('wizard.step4.subtitle')}</p>
         </div>
-        
-        <button 
+
+        <button
           onClick={requestLocation}
           disabled={isLocating}
           className="btn-secondary whitespace-nowrap text-sm py-2"
         >
           <Navigation className={`w-4 h-4 ${isLocating ? 'animate-spin' : ''}`} />
-          {isLocating ? 'Hinahanap...' : 'Gamitin ang aking Lokasyon'}
+          {isLocating ? t('wizard.step4.locating') : t('wizard.step4.useLocation')}
         </button>
       </div>
 
@@ -103,7 +101,7 @@ export function StepNearestOffice() {
       )}
 
       <div className="flex flex-col gap-4">
-        {nearestOffices.map((office, idx) => (
+        {nearestOffices.map((office) => (
           <div key={office.id} className="card p-5">
             <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-4">
               <div>
@@ -127,21 +125,21 @@ export function StepNearestOffice() {
             <VerificationWarning lastVerifiedAt={office.last_verified_at} className="mb-4" />
 
             <div className="bg-slate-50 rounded-lg p-3 text-sm mb-4">
-              <span className="font-semibold text-slate-700 block mb-1">Paano Pumunta:</span>
+              <span className="font-semibold text-slate-700 block mb-1">{t('wizard.step4.directions')}</span>
               <p className="text-slate-600">{office.transit_directions_fil}</p>
             </div>
 
             <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-slate-100">
               {office.contact_number && (
                 <a href={`tel:${office.contact_number}`} className="btn-secondary flex-1 py-2 text-sm">
-                  <Phone className="w-4 h-4" /> Tawagan: {office.contact_number}
+                  <Phone className="w-4 h-4" /> {t('wizard.step4.call')} {office.contact_number}
                 </a>
               )}
               {office.google_maps_url && (
-                <a 
-                  href={office.google_maps_url} 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
+                <a
+                  href={office.google_maps_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="btn-primary flex-1 py-2 text-sm"
                 >
                   <ExternalLink className="w-4 h-4" /> Google Maps
@@ -158,13 +156,12 @@ export function StepNearestOffice() {
             📧
           </div>
           <div className="flex-1">
-            <h3 className="font-bold text-bayani-blue-900 text-lg mb-1">Magpadala ng Email Request</h3>
+            <h3 className="font-bold text-bayani-blue-900 text-lg mb-1">{t('wizard.step4.emailTitle')}</h3>
             <p className="text-bayani-blue-800 text-sm mb-4 leading-relaxed">
-              Kung hindi ka makakapunta nang personal, maaari kang humingi ng tulong medikal sa mga Senador o Party-List online. 
-              Awtomatikong isasama ng system ang mga dokumentong chineck mo sa email template!
+              {t('wizard.step4.emailDesc')}
             </p>
             <a href="/legislators" className="btn-primary inline-flex items-center gap-2 py-2 px-6 text-sm whitespace-nowrap w-full sm:w-auto justify-center">
-              Pumili ng Opisyal <ExternalLink className="w-4 h-4" />
+              {t('wizard.step4.chooseOfficial')} <ExternalLink className="w-4 h-4" />
             </a>
           </div>
         </div>
