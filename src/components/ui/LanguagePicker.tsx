@@ -10,12 +10,15 @@ export function LanguagePicker() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    // Only show if user hasn't picked a language yet
     const chosen = localStorage.getItem(STORAGE_KEY);
-    if (!chosen) {
+    if (chosen) {
+      // Restore previously chosen language on every load
+      i18n.changeLanguage(chosen);
+    } else {
+      // First visit — show the picker
       setVisible(true);
     }
-  }, []);
+  }, [i18n]);
 
   const pick = (lang: 'en' | 'fil') => {
     i18n.changeLanguage(lang);
