@@ -6,6 +6,7 @@ import { Footer } from "@/components/layout/Footer";
 import { EmergencyHotlines } from "@/components/ui/EmergencyHotlines";
 import { OfflineBanner } from "@/components/ui/OfflineBanner";
 import { I18nProvider } from "@/i18n/I18nProvider";
+import { LanguagePicker } from "@/components/ui/LanguagePicker";
 
 const inter = Inter({ subsets: ["latin"], variable: '--font-inter' });
 
@@ -36,6 +37,7 @@ export default function RootLayout({
     <html lang="fil" className={inter.variable}>
       <body className="flex flex-col min-h-[100dvh] bg-slate-50">
         <I18nProvider>
+          <LanguagePicker />
           <header className="sticky top-0 z-40 bg-transparent">
             <EmergencyHotlines />
             <OfflineBanner />
