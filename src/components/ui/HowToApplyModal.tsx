@@ -3,6 +3,50 @@
 import React, { useEffect } from 'react';
 import { X, ExternalLink, CheckCircle2, AlertCircle } from 'lucide-react';
 
+// ── URL auto-linker ────────────────────────────────────────
+const URL_REGEX = /(https?:\/\/[^\s]+|(?:[a-z0-9-]+\.)+(?:gov\.ph|com\.ph|com|ph|org)(?:\/[^\s]*)?)/gi;
+
+function LinkifiedText({ text, className }: { text: string; className?: string }) {
+  const parts = text.split(URL_REGEX);
+  return (
+    <span className={className}>
+      {parts.map((part, i) => {
+        if (URL_REGEX.test(part)) {
+          URL_REGEX.lastIndex = 0; // reset stateful regex
+          const href = part.startsWith('http') ? part : `https://${part}`;
+          return (
+            <a
+              key={i}
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-bayani-blue-600 underline underline-offset-2 hover:text-bayani-blue-800 font-medium break-all"
+            >
+              {part}
+            </a>
+          );
+        }
+        URL_REGEX.lastIndex = 0;
+        return <span key={i}>{part}</span>;
+      })}
+    </span>
+  );
+}
+
+// ── Disclaimer banner ─────────────────────────────────────
+function DisclaimerBanner() {
+  return (
+    <div className="shrink-0 mx-5 mb-4 bg-red-50 border border-red-200 rounded-2xl p-3.5 flex gap-2.5 items-start">
+      <span className="text-lg leading-none shrink-0 mt-0.5">⚠️</span>
+      <div className="text-xs text-red-800 leading-relaxed">
+        <strong className="block mb-0.5">Paalala: Ito ay gabay lamang.</strong>
+        Hindi garantisado ang tulong. Maraming opisina at senador ay <strong>maaaring walang budget</strong> o pansamantalang hindi tumatanggap.
+        <span className="block mt-1">📞 <strong>Tawagan o i-message muna</strong> bago pumunta o magpadala ng email para maiwasan ang aksaya ng panahon at gastos.</span>
+      </div>
+    </div>
+  );
+}
+
 interface Step {
   label: string;
   detail: string;
@@ -258,6 +302,101 @@ const guides: Record<string, HowToApplyGuide> = {
       'Kung hindi aktibo ang membership, maaaring bayaran ang contributions bago mag-ospital.',
     ],
   },
+
+  'senator-id': {
+    title: 'Senate SPAO — Medical Assistance Online',
+    subtitle: 'Official na portal ng Senado: assist.senate.gov.ph',
+    applyUrl: 'https://assist.senate.gov.ph/forms/medical',
+    applyLabel: '🌐 Pumunta sa Senate Online Form',
+    isOnline: true,
+    sections: [
+      {
+        label: 'MGA KINAKAILANGANG DOKUMENTO',
+        icon: '📋',
+        steps: [
+          {
+            label: 'Personal na liham para sa Senador',
+            detail: 'Sulatin ang iyong sariling liham na naka-address sa isang Senador na hihingan ng tulong. Ipaliwanag ang sitwasyon ng pasyente.',
+          },
+          {
+            label: 'Medical Certificate o Clinical Abstract',
+            detail: 'Kumuha mula sa ospital o doktor ng pasyente. Dapat nakalagay ang diagnosis at rekomendasyon.',
+          },
+          {
+            label: 'Quotation / Hospital Bill / Reseta',
+            detail: 'Hospital Bill, Statement of Account, Treatment Protocol, Laboratory Request, o Reseta ng gamot.',
+          },
+          {
+            label: 'Kopya ng ID ng pasyente at representative',
+            detail: 'Dalawang valid ID — isa para sa pasyente, isa para sa magpo-proseso (representative).',
+          },
+          {
+            label: 'Accomplished SPAO Medical Assistance Form',
+            detail: 'Pinupuno ito sa online — ang form mismo sa assist.senate.gov.ph/forms/medical ang SPAO form na ito.',
+          },
+          {
+            label: 'Barangay Certificate of Indigency (opsyonal)',
+            detail: 'Irekumenda pero hindi palaging kinakailangan. Nakatutulong ito para mas mabilis na maproseso ang request.',
+          },
+        ],
+      },
+      {
+        label: 'PAANO MAG-APPLY ONLINE (STEP BY STEP)',
+        icon: '💻',
+        steps: [
+          {
+            label: 'Pumunta sa opisyal na portal',
+            detail: 'Buksan ang assist.senate.gov.ph/forms/medical sa iyong browser. Libre at opisyal ito ng Senado ng Pilipinas.',
+          },
+          {
+            label: 'Piliin ang ospital at Senador',
+            detail: 'Sa form, piliin ang ospital kung saan naka-confine ang pasyente, at piliin kung aling Senador ang lapitan. Puwedeng pumili ng kahit sinong Senador.',
+          },
+          {
+            label: 'Punan ang impormasyon ng pasyente',
+            detail: 'Ilagay ang buong pangalan, petsa ng kapanganakan, edad, cellphone number, nationality, civil status, kasarian, address (province, city, barangay), at monthly household income.',
+          },
+          {
+            label: 'Punan ang medikal na impormasyon',
+            detail: 'Piliin ang Patient\'s Service (ward/pay/semi-private), diagnosis, at uri ng tulong na kailangan.',
+          },
+          {
+            label: 'I-upload ang mga requirements',
+            detail: 'I-upload ang mga dokumento sa tamang slot. Format: JPEG / JPG / PDF lamang. Maximum 5MB bawat file. Kung maraming pahina, gamitin ang smallpdf.com/jpg-to-pdf para i-merge sa isang PDF.',
+          },
+          {
+            label: 'I-check ang privacy consent at i-submit',
+            detail: 'Basahin ang Data Privacy consent, lagyan ng tsek, at i-click ang "AGREE & SUBMIT". Ikaw ay makakatanggap ng confirmation.',
+          },
+        ],
+      },
+      {
+        label: 'PARAAN 2 — PERSONAL NA PAGBISITA (WALK-IN)',
+        icon: '🏛️',
+        steps: [
+          {
+            label: 'Magdala ng lahat ng dokumento (original + photocopy)',
+            detail: 'Magdala ng personal na liham, Medical Certificate, Hospital Bill/Reseta, at valid ID ng pasyente at representative.',
+          },
+          {
+            label: 'Pumunta sa Senate SPAO Office',
+            detail: 'GSIS Building, Financial Center, Diokno Blvd., Pasay City. O pumunta sa opisina ng iyong piniling Senador.',
+          },
+          {
+            label: 'Makipag-usap sa staff at sumunod sa kanilang proseso',
+            detail: 'Sabihin na nag-a-apply ka ng medical assistance. Sila ang magga-guide sa susunod na hakbang.',
+          },
+        ],
+      },
+    ],
+    notes: [
+      '⚠️ Sa kasalukuyan, limitado lamang sa mga DOH hospitals at iba pang public hospitals ang pinagkakalooban ng medical assistance.',
+      '📄 Kung maraming pahina ang dokumento, i-merge muna gamit ang smallpdf.com/jpg-to-pdf bago i-upload.',
+      '✅ Maaaring pumili ng kahit sinong Senador — walang kinakailangang constituency.',
+      '📱 Para sa follow-up, makipag-ugnayan sa opisina ng iyong piniling Senador sa pamamagitan ng email o Facebook.',
+      '🔗 Official portal: assist.senate.gov.ph | Form: assist.senate.gov.ph/forms/medical',
+    ],
+  },
 };
 
 // ── Modal Component ────────────────────────────────────────
@@ -343,7 +482,7 @@ export function HowToApplyModal({ providerId, providerName, onClose }: Props) {
                       </div>
                       <div>
                         <p className="font-semibold text-sm text-slate-800">{step.label}</p>
-                        <p className="text-xs text-slate-500 mt-0.5 leading-relaxed">{step.detail}</p>
+                        <LinkifiedText text={step.detail} className="text-xs text-slate-500 mt-0.5 leading-relaxed block" />
                       </div>
                     </li>
                   ))}
@@ -358,13 +497,16 @@ export function HowToApplyModal({ providerId, providerName, onClose }: Props) {
                 {guide.notes.map((note, i) => (
                   <div key={i} className="flex gap-2 items-start">
                     <CheckCircle2 className="w-3.5 h-3.5 text-amber-500 shrink-0 mt-0.5" />
-                    <p className="text-xs text-amber-800">{note}</p>
+                    <LinkifiedText text={note} className="text-xs text-amber-800" />
                   </div>
                 ))}
               </div>
             )}
           </div>
         )}
+
+        {/* Sticky disclaimer */}
+        <DisclaimerBanner />
 
         <div className="p-4 border-t border-slate-100">
           <button onClick={onClose} className="btn-secondary w-full py-2 text-sm">

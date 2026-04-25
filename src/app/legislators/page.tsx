@@ -5,6 +5,8 @@ import { legislators, assistanceTypes } from '@/data/seed-data';
 import { useWizardStore } from '@/store/wizardStore';
 import { Mail, AlertTriangle, Users, Clock, ExternalLink, Copy, Check } from 'lucide-react';
 import { ReportWrongInfo } from '@/components/ui/ReportWrongInfo';
+import { ProviderModal } from '@/components/ui/ProviderModal';
+import { Legislator } from '@/data/types';
 
 // Build email body shared by both app and web links
 function buildEmailParts(gl_email: string, subject_format: string, documentsList?: string[]) {
@@ -93,6 +95,7 @@ function openGmail(gl_email: string, subject_format: string, documentsList?: str
 export default function LegislatorsPage() {
   const [filter, setFilter] = useState<'all' | 'senator' | 'party_list' | 'executive' | 'accepting'>('all');
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [selectedLeg, setSelectedLeg] = useState<Legislator | null>(null);
   const [mounted, setMounted] = React.useState(false);
 
   React.useEffect(() => {
@@ -143,6 +146,12 @@ export default function LegislatorsPage() {
 
   return (
     <div className="flex flex-col gap-6 animate-fade-in">
+      {selectedLeg && (
+        <ProviderModal
+          legislator={selectedLeg}
+          onClose={() => setSelectedLeg(null)}
+        />
+      )}
       <div className="mb-2">
         <h1 className="text-3xl font-bold mb-2 text-bayani-blue-900">GL mula sa mga Opisyal</h1>
         <p className="text-slate-500 max-w-3xl leading-relaxed">
@@ -182,7 +191,11 @@ export default function LegislatorsPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {filteredLegislators.map(leg => (
-          <div key={leg.id} className="card p-0 overflow-hidden flex flex-col">
+          <div
+            key={leg.id}
+            className="card p-0 overflow-hidden flex flex-col cursor-pointer group hover:shadow-lg hover:-translate-y-1 transition-all duration-200"
+            onClick={() => setSelectedLeg(leg)}
+          >
             {/* Header */}
             <div className="p-5 border-b border-slate-100 flex gap-4 items-start">
               <div className="w-14 h-14 bg-bayani-blue-50 rounded-full shrink-0 flex items-center justify-center text-2xl">

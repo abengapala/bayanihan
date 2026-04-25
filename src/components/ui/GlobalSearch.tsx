@@ -1,8 +1,9 @@
 'use client';
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Search, X, MapPin, Mail, ExternalLink, Phone, Building2, Users, Landmark } from 'lucide-react';
+import { Search, X, MapPin, Mail, ExternalLink, Phone, Building2, Users, Landmark, BookOpen } from 'lucide-react';
 import { legislators, hospitals, offices } from '@/data/seed-data';
+import { HowToApplyModal } from './HowToApplyModal';
 
 type ResultType = 'legislator' | 'office' | 'hospital';
 
@@ -20,6 +21,7 @@ interface SearchResult {
   address?: string | null;
   program?: string | null;
   hotline?: string | null;
+  providerId?: string | null;  // for HowToApplyModal
 }
 
 function buildAllResults(): SearchResult[] {
@@ -63,6 +65,7 @@ function buildAllResults(): SearchResult[] {
       mapsUrl: office.google_maps_url,
       address: office.address_line,
       hotline: office.contact_number,
+      providerId: office.provider_id,
     });
   }
 
@@ -125,6 +128,7 @@ interface GlobalSearchProps {
 
 export function GlobalSearch({ open, onClose }: GlobalSearchProps) {
   const [query, setQuery] = useState('');
+  const [applyGuide, setApplyGuide] = useState<{ providerId: string; providerName: string } | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const results = query.trim().length >= 2
@@ -154,6 +158,13 @@ export function GlobalSearch({ open, onClose }: GlobalSearchProps) {
       className="fixed inset-0 z-50 flex items-start justify-center bg-black/40 backdrop-blur-sm px-4 pt-16 pb-4"
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
     >
+      {applyGuide && (
+        <HowToApplyModal
+          providerId={applyGuide.providerId}
+          providerName={applyGuide.providerName}
+          onClose={() => setApplyGuide(null)}
+        />
+      )}
       <div className="w-full max-w-xl bg-white rounded-2xl shadow-2xl flex flex-col max-h-[80vh] overflow-hidden border border-slate-200 animate-fade-in">
         {/* Search Input */}
         <div className="flex items-center gap-3 px-4 py-3 border-b border-slate-100">
@@ -241,6 +252,15 @@ export function GlobalSearch({ open, onClose }: GlobalSearchProps) {
                         <Mail className="w-3 h-3" />
                         Alt Email
                       </a>
+                    )}
+                    {result.providerId && (
+                      <button
+                        onClick={() => setApplyGuide({ providerId: result.providerId!, providerName: result.title })}
+                        className="flex items-center gap-1.5 text-xs bg-amber-50 border border-amber-200 text-amber-700 px-3 py-1.5 rounded-lg font-semibold hover:bg-amber-100 transition-colors"
+                      >
+                        <BookOpen className="w-3 h-3" />
+                        Paano Mag-apply
+                      </button>
                     )}
                     {result.mapsUrl && (
                       <a

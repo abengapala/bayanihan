@@ -4,13 +4,16 @@ import React, { useState } from 'react';
 import { providers, offices } from '@/data/seed-data';
 import { StatusBadge } from '@/components/ui/StatusBadge';
 import { HowToApplyModal } from '@/components/ui/HowToApplyModal';
-import { Search, MapPin, Phone, Building2, BookOpen } from 'lucide-react';
+import { ProviderModal } from '@/components/ui/ProviderModal';
+import { OfficeLocation } from '@/data/types';
+import { Search, MapPin, Phone, Building2, BookOpen, Map } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 export default function DirectoryPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState<string>('all');
   const [activeGuide, setActiveGuide] = useState<{ providerId: string; providerName: string } | null>(null);
+  const [selectedOffice, setSelectedOffice] = useState<{ office: OfficeLocation; tab: 'apply' | 'map' } | null>(null);
   const { t } = useTranslation();
 
   const filteredOffices = offices.filter(office => {
@@ -32,6 +35,13 @@ export default function DirectoryPage() {
         providerName={activeGuide?.providerName ?? ''}
         onClose={() => setActiveGuide(null)}
       />
+      {selectedOffice && (
+        <ProviderModal
+          office={selectedOffice.office}
+          defaultTab={selectedOffice.tab}
+          onClose={() => setSelectedOffice(null)}
+        />
+      )}
 
       <div className="mb-2">
         <h1 className="text-3xl font-bold mb-2 text-bayani-blue-900">{t('directory.title')}</h1>
@@ -114,26 +124,26 @@ export default function DirectoryPage() {
 
                 <div className="mt-auto pt-4 border-t border-slate-100 flex gap-2">
                   <button
-                    onClick={() => setActiveGuide({
-                      providerId: office.provider_id,
-                      providerName: provider?.name_en ?? office.branch_name,
-                    })}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedOffice({ office, tab: 'apply' });
+                    }}
                     className="btn-secondary py-2 flex-1 text-sm bg-slate-50 border-slate-200 text-slate-700 hover:bg-bayani-blue-50 hover:text-bayani-blue-700 hover:border-bayani-blue-200 flex items-center justify-center gap-1.5"
                   >
                     <BookOpen className="w-3.5 h-3.5" />
                     {t('directory.howToApply')}
                   </button>
 
-                  {office.google_maps_url && (
-                    <a
-                      href={office.google_maps_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="btn-primary flex-1 py-2 text-sm"
-                    >
-                      {t('directory.map')}
-                    </a>
-                  )}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedOffice({ office, tab: 'map' });
+                    }}
+                    className="btn-primary flex-1 py-2 text-sm flex items-center justify-center gap-1.5"
+                  >
+                    <Map className="w-3.5 h-3.5" />
+                    {t('directory.map')}
+                  </button>
                 </div>
               </div>
             );

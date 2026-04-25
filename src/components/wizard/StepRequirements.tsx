@@ -4,10 +4,24 @@ import React, { useMemo, useState } from 'react';
 import { useWizardStore } from '@/store/wizardStore';
 import { assistanceTypes } from '@/data/seed-data';
 import { ProviderChannel } from '@/data/types';
-import { Check, Info, FileText, AlertCircle, Printer, X } from 'lucide-react';
+import { Check, Info, FileText, AlertCircle, Printer, X, Send } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { HowToApplyModal } from '@/components/ui/HowToApplyModal';
 
 const CHANNEL_ORDER: ProviderChannel[] = ['pcso', 'dswd', 'senator'];
+
+// Maps wizard channel → HowToApplyModal providerId
+function channelToProviderId(channel: ProviderChannel): string {
+  if (channel === 'pcso') return 'pcso-id';
+  if (channel === 'dswd') return 'dswd-id';
+  return 'senator-id';
+}
+
+function channelToProviderName(channel: ProviderChannel, isEn: boolean): string {
+  if (channel === 'pcso') return isEn ? 'PCSO Medical Assistance Program' : 'PCSO MAP';
+  if (channel === 'dswd') return isEn ? 'DSWD AICS' : 'DSWD AICS';
+  return isEn ? 'Senator / Party-list' : 'Senador / Party-list';
+}
 
 // ── Missing Docs Modal ─────────────────────────────────────────────────────
 function MissingDocsModal({ missing, onClose, onProceed }: {
@@ -70,10 +84,12 @@ export function StepRequirements() {
     toggleDocument,
     nextStep,
   } = useWizardStore();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const isEnglish = i18n.language === 'en';
 
   const [showMissingModal, setShowMissingModal] = useState(false);
   const [missingDocs, setMissingDocs] = useState<string[]>([]);
+  const [showApplyModal, setShowApplyModal] = useState(false);
 
   const selectedType = useMemo(() =>
     assistanceTypes.find(t => t.id === assistanceCategory) ?? null,
@@ -97,7 +113,7 @@ export function StepRequirements() {
     if (!selectedChannel) return;
     const missing = requiredReqs
       .filter(r => !checkedSet.has(r.id))
-      .map(r => r.label);
+      .map(r => isEnglish ? r.label_en : r.label);
 
     if (missing.length > 0) {
       setMissingDocs(missing);
@@ -116,6 +132,13 @@ export function StepRequirements() {
           onProceed={() => { setShowMissingModal(false); nextStep(); }}
         />
       )}
+      {showApplyModal && selectedChannel && (
+        <HowToApplyModal
+          providerId={channelToProviderId(selectedChannel)}
+          providerName={channelToProviderName(selectedChannel, isEnglish)}
+          onClose={() => setShowApplyModal(false)}
+        />
+      )}
 
       <div className="flex flex-col h-full animate-slide-in-right">
         {/* Header */}
@@ -125,7 +148,7 @@ export function StepRequirements() {
             {selectedType && (
               <p className="text-sm text-slate-500 mt-0.5">
                 <span className="mr-1">{selectedType.icon}</span>
-                {selectedType.title}
+                {isEnglish ? selectedType.titleEnglish : selectedType.title}
               </p>
             )}
           </div>
@@ -203,7 +226,7 @@ export function StepRequirements() {
 
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-0.5 flex-wrap">
-                        <h3 className="font-bold text-slate-800 leading-tight text-sm">{req.label}</h3>
+                        <h3 className="font-bold text-slate-800 leading-tight text-sm">{isEnglish ? req.label_en : req.label}</h3>
                         {!req.isRequired && (
                           <span className="text-[10px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full font-medium shrink-0">
                             {t('wizard.step3.optional')}
@@ -215,10 +238,10 @@ export function StepRequirements() {
                           </span>
                         )}
                       </div>
-                      {req.note && (
+                      {(isEnglish ? req.note_en : req.note) && (
                         <div className="tip-box flex items-start gap-1.5 mt-1.5">
                           <Info className="w-3.5 h-3.5 shrink-0 text-bayani-gold-600 mt-0.5" />
-                          <span className="text-xs leading-relaxed">{req.note}</span>
+                          <span className="text-xs leading-relaxed">{isEnglish ? req.note_en : req.note}</span>
                         </div>
                       )}
                     </div>
@@ -233,16 +256,26 @@ export function StepRequirements() {
         <div className="mt-auto pt-4 border-t border-slate-100 flex items-center gap-3 justify-between">
           <button
             onClick={() => window.print()}
-            className="btn-secondary py-2 px-4 text-sm flex items-center gap-1.5"
+            className="btn-secondary py-2 px-4 text-sm flex items-center gap-1.5 shrink-0"
             aria-label="Print Checklist"
           >
             <Printer className="w-4 h-4" /> Print
           </button>
 
+          {selectedChannel && (
+            <button
+              onClick={() => setShowApplyModal(true)}
+              className="btn-gold flex-1 py-2.5 text-sm flex items-center justify-center gap-2"
+            >
+              <Send className="w-4 h-4" />
+              {isEnglish ? 'How to Apply →' : 'Paano Mag-apply →'}
+            </button>
+          )}
+
           <button
             onClick={handleNext}
             disabled={!selectedChannel}
-            className="btn-primary flex-1 py-2.5 text-sm"
+            className="btn-primary shrink-0 py-2.5 px-4 text-sm"
           >
             {t('wizard.step3.next')}
           </button>

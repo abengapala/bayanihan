@@ -16,8 +16,10 @@ export type FlagReason = 'wrong_info' | 'office_closed' | 'email_invalid' | 'oth
 
 export interface AssistanceRequirement {
   id: string;
-  label: string;
-  note: string | null;
+  label: string;       // Filipino label
+  label_en: string;    // English label
+  note: string | null; // Filipino note
+  note_en: string | null; // English note
   isRequired: boolean;
 }
 

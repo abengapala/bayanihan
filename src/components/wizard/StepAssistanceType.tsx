@@ -7,7 +7,8 @@ import { useTranslation } from 'react-i18next';
 
 export function StepAssistanceType() {
   const { assistanceCategory, setAssistanceCategory, nextStep } = useWizardStore();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const isEnglish = i18n.language === 'en';
 
   const handleSelect = (id: string) => {
     setAssistanceCategory(id as any);
@@ -42,8 +43,12 @@ export function StepAssistanceType() {
                 {type.icon}
               </div>
               <div>
-                <div className="font-bold text-sm md:text-base text-slate-800 leading-tight mb-0.5">{type.title}</div>
-                <div className="text-xs text-slate-500">{type.titleEnglish}</div>
+                <div className="font-bold text-sm md:text-base text-slate-800 leading-tight mb-0.5">
+                  {isEnglish ? type.titleEnglish : type.title}
+                </div>
+                <div className="text-xs text-slate-500">
+                  {isEnglish ? type.title : type.titleEnglish}
+                </div>
               </div>
             </button>
           );
